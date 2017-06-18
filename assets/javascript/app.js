@@ -8,11 +8,39 @@ var database = firebase.database();
 
 
 
-database.ref().on("child_added", function(snapshot) {
+$("#submit").on("click", function(event) {
+  event.preventDefault();
+  var inputHours = $("#time-input-one").val().trim();
+  var inputMinutes = $("#time-input-two").val().trim();
+  if(isValidTime(inputHours, inputMinutes)){
+    $("#time-warning").addClass("hidden");
+    //turn the two input time numbers into one time
+    var firstTime = inputHours.toString() + ":" + inputMinutes.toString();
 
+    var train = {
+      name: $("#train-name-input").val().trim(),
+      destination: $("#destination-input").val().trim(),
+      // firstTime: $("#first-time-input").val().trim(),
+      firstTime: firstTime,
+      frequency: $("#frequency-input").val().trim()
+    };
+    //use firebase.push
+    database.ref().push(train);
+    $("#train-name-input").val("");
+    $("#destination-input").val("");
+    $("#first-time-input").val("");
+    $("#frequency-input").val("");
+  }
+  else{
+    console.log("invalid");
+    $("#time-warning").removeClass("hidden");
+  }
+
+
+});
+
+database.ref().on("child_added", function(snapshot) {
   // Print the initial data to the console.
-  console.log(snapshot.val());
-  console.log("test");
   var obj = snapshot.val();
   var key = snapshot.key;
   var arrivalObj = calcNextArrival(obj.firstTime, obj.frequency);
@@ -27,30 +55,34 @@ database.ref().on("child_added", function(snapshot) {
   //use local storage for offline
 });
 
-$("#submit").on("click", function(event) {
-  event.preventDefault();
-  var train = {
-    name: $("#train-name-input").val().trim(),
-    destination: $("#destination-input").val().trim(),
-    firstTime: $("#first-time-input").val().trim(),
-    frequency: $("#frequency-input").val().trim()
-  };
-  //use firebase.push
-  database.ref().push(train);
 
-});
+
+
+
+
+
+
 
 function calcNextArrival(firstTime, frequency){
-  var firstTimeMoment = moment(firstTime, "hh:mm").subtract(1,"years");
-  var currentTimeMoment = moment(moment(), "hh:mm");
-  var diffTime = currentTimeMoment.diff(firstTimeMoment, "minutes");
+  var firstTimeMoment = moment(firstTime, "HH:mm").subtract(1,"years");
+  var diffTime = moment().diff(firstTimeMoment, "minutes");
   var remainder = diffTime % frequency;
   var minutesToNext = frequency - remainder;
-  var nextArrival = currentTimeMoment.add(minutesToNext, "minutes");
+  var nextArrival = moment().add(minutesToNext, "minutes");
 
 
   return {
     minutesToNext: minutesToNext,
     nextArrival: nextArrival.format("hh:mm a"),
   };
+}
+
+function isValidTime(hours, minutes){
+  if(hours>23||minutes>59){
+    return false;
+  }
+  else{
+    console.log(true);
+    return true;
+  }
 }

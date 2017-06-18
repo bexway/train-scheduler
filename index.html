@@ -41,28 +41,29 @@
         <form role="form">
           <div class="form-group">
             <label for="train-name-input">Train Name:</label>
-            <input class="form-control" id="train-name-input" type="text">
+            <input class="form-control" id="train-name-input" type="text" value="name">
           </div>
           <div class="form-group">
             <label for="destination-input">Destination:</label>
-            <input class="form-control" id="destination-input" type="text">
-          </div>
-          <div class="form-group">
-            <label for="first-time-input">First Train Time (HH:mm military time):</label>
-            <input class="form-control" id="first-time-input" type="text" maxlength="5">
+            <input class="form-control" id="destination-input" type="text" value="destination">
           </div>
           <!-- <div class="form-group">
             <label for="first-time-input">First Train Time (HH:mm military time):</label>
-            <div style="display:inline;" class="time-input">
-              <input class="form-control" id="time-input-one" type="text" maxlength="2">
-              :
-              <input class="form-control" id="time-input-two" type="text" maxlength="2">
-            </div>
-
+            <input class="form-control" id="first-time-input" type="text" maxlength="5">
           </div> -->
           <div class="form-group">
+            <label for="first-time-input">First Train Time (HH:mm military time):</label>
+            <div class="time-input">
+              <input class="form-control short-form inline" id="time-input-one" type="number" min="00" max="23" maxlength="2" value="66">
+              <span class="inline">:</span>
+              <input class="form-control short-form inline" id="time-input-two" type="number" min="00" max="59" maxlength="2" value="66">
+              <p id="time-warning" class="hidden">Please enter a vaild time!</p>
+            </div>
+
+          </div>
+          <div class="form-group">
             <label for="frequency-input">Frequency (mm):</label>
-            <input class="form-control" id="frequency-input" type="number">
+            <input class="form-control" id="frequency-input" type="number" maxlength="2" value="15">
           </div>
           <button class="btn btn-default" id="submit" type="submit">Submit</button>
         </form>
