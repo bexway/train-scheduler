@@ -10,12 +10,76 @@
     <link rel="stylesheet" href="assets/css/style.css">
   </head>
   <body>
+
+    <div class="container">
+      <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Trains</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <td>Train Name</td>
+              <td>Destination</td>
+              <!-- <td>Frequency</td> -->
+              <td>Next Arrival</td>
+              <td>Minutes Away</td>
+              <td>Delete?</td>
+            </tr>
+          </thead>
+          <tbody id="tablebody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Add Train</h3>
+      </div>
+      <div class="panel-body">
+        <form role="form">
+          <div class="form-group">
+            <label for="train-name-input">Train Name:</label>
+            <input class="form-control" id="train-name-input" type="text">
+          </div>
+          <div class="form-group">
+            <label for="destination-input">Destination:</label>
+            <input class="form-control" id="destination-input" type="text">
+          </div>
+          <div class="form-group">
+            <label for="first-time-input">First Train Time (HH:mm military time):</label>
+            <input class="form-control" id="first-time-input" type="text" maxlength="5">
+          </div>
+          <!-- <div class="form-group">
+            <label for="first-time-input">First Train Time (HH:mm military time):</label>
+            <div style="display:inline;" class="time-input">
+              <input class="form-control" id="time-input-one" type="text" maxlength="2">
+              :
+              <input class="form-control" id="time-input-two" type="text" maxlength="2">
+            </div>
+
+          </div> -->
+          <div class="form-group">
+            <label for="frequency-input">Frequency (mm):</label>
+            <input class="form-control" id="frequency-input" type="number">
+          </div>
+          <button class="btn btn-default" id="submit" type="submit">Submit</button>
+        </form>
+        </div>
+      </div>
+    </div>
+
+  <script src="https://www.gstatic.com/firebasejs/4.1.2/firebase.js"></script>
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
   <script
   src="https://code.jquery.com/jquery-3.2.1.js"
   integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
   crossorigin="anonymous"></script>
-  <script type="text/javascript" src="assets/javascript/app.js"></script>
+    <script src="http://cdn.jquerytools.org/1.2.6/full/jquery.tools.min.js"></script>
   <!-- The config script should contain necessary api keys -->
   <script type="text/javascript" src="assets/javascript/config.js"></script>
+  <script type="text/javascript" src="assets/javascript/app.js"></script>
 </body>
 </html>
