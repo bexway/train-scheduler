@@ -54,7 +54,3 @@ function calcNextArrival(firstTime, frequency){
     nextArrival: nextArrival.format("hh:mm a"),
   };
 }
-
-$.tools.validator.fn("[type=timetest]", "Please supply a valid time", function(input, value) {
-    return /^\d\d:\d\d$/.test(value);
-    });
