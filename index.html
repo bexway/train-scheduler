@@ -12,6 +12,9 @@
   <body>
 
     <div class="container">
+      <div id="clock" class="jumbotron">
+        time
+      </div>
       <div class="panel panel-primary">
       <div class="panel-heading">
         <h3 class="panel-title">Trains</h3>
@@ -22,7 +25,6 @@
             <tr>
               <td>Train Name</td>
               <td>Destination</td>
-              <!-- <td>Frequency</td> -->
               <td>Next Arrival</td>
               <td>Minutes Away</td>
               <td>Delete?</td>
@@ -54,9 +56,9 @@
           <div class="form-group">
             <label for="first-time-input">First Train Time (HH:mm military time):</label>
             <div class="time-input">
-              <input class="form-control short-form inline" id="time-input-one" type="number" min="00" max="23" maxlength="2" value="66">
+              <input class="form-control short-form inline" id="time-input-one" type="number" min="00" max="23" maxlength="2" value="10">
               <span class="inline">:</span>
-              <input class="form-control short-form inline" id="time-input-two" type="number" min="00" max="59" maxlength="2" value="66">
+              <input class="form-control short-form inline" id="time-input-two" type="number" min="00" max="59" maxlength="2" value="10">
               <p id="time-warning" class="hidden">Please enter a vaild time!</p>
             </div>
 
