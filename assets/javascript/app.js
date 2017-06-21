@@ -62,11 +62,19 @@ database.ref().on("child_added", function(snapshot) {
   //creating an object with the next train's arrival time and the minutes to the next train
   var arrivalObj = calcNextArrival(obj.firstTime, obj.frequency);
   //creates a row with a bunch of columns
-  var row = $('<tr class="trainRow" id="train'+trainID+'">').data("data-key", key).append($('<td class="trainName">').html(obj.name)).append($('<td class="trainDestination">').html(obj.destination)).append($('<td class="nextArrival">').html(arrivalObj.nextArrival)).append($('<td class="minutesToNext">').html(arrivalObj.minutesToNext));
+  var row = $('<tr class="trainRow" id="train'+trainID+'">')
+            .data("data-frequency", obj.frequency)
+            .data("data-firstTime", obj.firstTime)
+            .append($('<td class="trainName">').html(obj.name))
+            .append($('<td class="trainDestination">').html(obj.destination))
+            .append($('<td class="nextArrival">').html(arrivalObj.nextArrival))
+            .append($('<td class="minutesToNext">').html(arrivalObj.minutesToNext));
   //creating a button with the key for the db data attached, and the ID to find this row
-  var button = $("<button>").html("x").addClass("deleteButton").data("data-key", key).attr("data-trainID", trainID);
-  //add the button, firsttime and frequency to the row (for deleting and updating each minute)
-  row.append($('<td>').append(button)).data("data-frequency", obj.frequency).data("data-firstTime", obj.firstTime);
+  var deleteButton = $("<button>").html('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>').addClass("deleteButton").data("data-key", key).attr("data-trainID", trainID);
+
+  var editButton = $("<button>").html('<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>').addClass("editButton").data("data-key", key).attr("data-trainID", trainID);
+  //add the buttons
+  row.append($('<td>').append(deleteButton)).append($('<td>').append(editButton));
   //append the row to the table and increment the train IDs
   $("#tablebody").append(row);
   trainID++;
@@ -77,14 +85,13 @@ database.ref().on("child_added", function(snapshot) {
 });
 
 $(document).on('click', '.deleteButton', function(){
-  console.log(this);
   database.ref().child($(this).data("data-key")).remove();
   lastDeleted = $(this).attr("data-trainID");
 
 });
 
 database.ref().on("child_removed", function(snapshot){
-  console.log(snapshot.val());
+  //find the row whose key matches the deleted object, and remove that row
   $('.trainRow').each(function(){
     var button = $(this).find(".deleteButton");
     if(button.data("data-key")===snapshot.key){
