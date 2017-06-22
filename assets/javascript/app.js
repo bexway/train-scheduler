@@ -45,7 +45,8 @@ $("#submit").on("click", function(event) {
     database.ref().push(train);
     $("#train-name-input").val("");
     $("#destination-input").val("");
-    $("#first-time-input").val("");
+    $("#time-input-one").val("");
+    $("#time-input-two").val("");
     $("#frequency-input").val("");
   }
   else{
@@ -65,14 +66,14 @@ database.ref().on("child_added", function(snapshot) {
   var row = $('<tr class="trainRow" id="train'+trainID+'">')
             .data("data-frequency", obj.frequency)
             .data("data-firstTime", obj.firstTime)
-            .append($('<td class="trainName">').html(obj.name))
-            .append($('<td class="trainDestination">').html(obj.destination))
-            .append($('<td class="nextArrival">').html(arrivalObj.nextArrival))
-            .append($('<td class="minutesToNext">').html(arrivalObj.minutesToNext));
+            .append($('<td class="trainName">').append($('<p>').html(obj.name)))
+            .append($('<td class="trainDestination">').append($('<p>').html(obj.destination)))
+            .append($('<td class="nextArrival">').append($('<p>').html(arrivalObj.nextArrival)))
+            .append($('<td class="minutesToNext">').append($('<p>').html(arrivalObj.minutesToNext)));
   //creating a button with the key for the db data attached, and the ID to find this row
-  var deleteButton = $("<button>").html('<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>').addClass("deleteButton").data("data-key", key).attr("data-trainID", trainID);
+  var deleteButton = $("<button>").html('<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>').addClass("deleteButton").data("data-key", key).attr("data-trainID", trainID);
 
-  var editButton = $("<button>").html('<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>').addClass("editButton").data("data-key", key).attr("data-trainID", trainID);
+  var editButton = $("<button>").html('<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>').addClass("editButton").data("data-key", key).attr("data-trainID", trainID).attr("data-editingStatus", 0);
   //add the buttons
   row.append($('<td>').append(deleteButton)).append($('<td>').append(editButton));
   //append the row to the table and increment the train IDs
@@ -84,7 +85,7 @@ database.ref().on("child_added", function(snapshot) {
   //use local storage for offline
 });
 
-$(document).on('click', '.deleteButton', function(){
+$("#tablebody").on('click', '.deleteButton', function(){
   database.ref().child($(this).data("data-key")).remove();
   lastDeleted = $(this).attr("data-trainID");
 
@@ -102,9 +103,23 @@ database.ref().on("child_removed", function(snapshot){
   console.log("Errors handled: "+errorObject.code);
 });
 //
-// $(document).on('click', '.editButton', function(){
-//check state. if editing, submit. if not editing, start edit
-// });
+$("#tablebody").on('click', '.editButton', function(){
+// check state. if editing, submit. if not editing, start edit
+  if(parseInt($(this).attr("data-editingStatus"))){
+    console.log("stop editing");
+    $(this).attr("data-editingStatus", 0);
+    $('#train'+$(this).attr("data-trainID")).find("p").attr("contenteditable", false);
+    $(this).find(".glyphicon").toggleClass("glyphicon-pencil").toggleClass("glyphicon-ok");
+
+  }else{
+    console.log("start editing");
+    $(this).attr("data-editingStatus", 1);
+    $('#train'+$(this).attr("data-trainID")).find("p").attr("contenteditable", true);
+    $(this).find(".glyphicon").toggleClass("glyphicon-pencil").toggleClass("glyphicon-ok");
+    //Change to indicate First Train and Frequency within that row
+    //Add class to make editing status noticeable: tint the whole row blue?
+  }
+});
 
 
 
