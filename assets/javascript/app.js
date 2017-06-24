@@ -66,16 +66,17 @@ database.ref().on("child_added", function(snapshot) {
   var row = $('<tr class="trainRow" id="train'+trainID+'">')
             .data("data-frequency", obj.frequency)
             .data("data-firstTime", obj.firstTime)
-            .append($('<td class="trainName">').append($('<p>').html(obj.name)))
-            .append($('<td class="trainDestination">').append($('<p>').html(obj.destination)))
-            .append($('<td class="nextArrival">').append($('<p>').html(arrivalObj.nextArrival)))
-            .append($('<td class="minutesToNext">').append($('<p>').html(arrivalObj.minutesToNext)));
+            .append($('<td class="trainName trainProperty">').append($('<p>').html(obj.name)))
+            .append($('<td class="trainDestination trainProperty">').append($('<p>').html(obj.destination)))
+            .append($('<td class="nextArrival trainProperty">').append($('<p>').html(arrivalObj.nextArrival)))
+            .append($('<td class="minutesToNext trainProperty">').append($('<p>').html(arrivalObj.minutesToNext)));
   //creating a button with the key for the db data attached, and the ID to find this row
   var deleteButton = $("<button>").html('<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>').addClass("deleteButton").data("data-key", key).attr("data-trainID", trainID);
 
-  var editButton = $("<button>").html('<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>').addClass("editButton").data("data-key", key).attr("data-trainID", trainID).attr("data-editingStatus", 0);
+  // var editButton = $("<button>").html('<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>').addClass("editButton").data("data-key", key).attr("data-trainID", trainID).attr("data-editingStatus", 0);
   //add the buttons
-  row.append($('<td>').append(deleteButton)).append($('<td>').append(editButton));
+  row.append($('<td>').append(deleteButton));
+  // row.append($('<td>').append(editButton));
   //append the row to the table and increment the train IDs
   $("#tablebody").append(row);
   trainID++;
@@ -103,36 +104,44 @@ database.ref().on("child_removed", function(snapshot){
   console.log("Errors handled: "+errorObject.code);
 });
 //
-$("#tablebody").on('click', '.editButton', function(){
-// check state. if editing, submit. if not editing, start edit
-  if(parseInt($(this).attr("data-editingStatus"))){
-    console.log("stop editing");
-    $(this).attr("data-editingStatus", 0);
-    $('#train'+$(this).attr("data-trainID")).find("p").attr("contenteditable", false);
-    $(this).find(".glyphicon").toggleClass("glyphicon-pencil").toggleClass("glyphicon-ok");
-
-  }else{
-    console.log("start editing");
-    $(this).attr("data-editingStatus", 1);
-    $('#train'+$(this).attr("data-trainID")).find("p").attr("contenteditable", true);
-    $(this).find(".glyphicon").toggleClass("glyphicon-pencil").toggleClass("glyphicon-ok");
-    //Change to indicate First Train and Frequency within that row
-    //Add class to make editing status noticeable: tint the whole row blue?
-  }
-});
-
-
-
-
-
-function updateArrivalTimes(){
-  $('.trainRow').each(function(){
-    var nextArrival = $(this).children(".nextArrival").text();
-    var arrivalObj = calcNextArrival($(this).data("data-firstTime"), $(this).data("data-frequency"));
-    $(this).children(".nextArrival").text(arrivalObj.nextArrival);
-    $(this).children(".minutesToNext").text(arrivalObj.minutesToNext);
-  });
-}
+// $("#tablebody").on('click', '.editButton', function(){
+// // check state. if editing, submit. if not editing, start edit
+//   if(parseInt($(this).attr("data-editingStatus"))){
+//     console.log("stop editing");
+//     $(this).attr("data-editingStatus", 0);
+//     $('#train'+$(this).attr("data-trainID")).find(".trainProperty").attr("contenteditable", false);
+//     $(this).find(".glyphicon").toggleClass("glyphicon-pencil").toggleClass("glyphicon-ok");
+//
+//   }else{
+//     console.log("start editing");
+//     var id = $(this).attr("data-trainID");
+//     $('#train'+id).find(".trainProperty").attr("contenteditable", true);
+//     $(this).attr("data-editingStatus", 1);
+//     // $('#train'+id).find(".nextArrival").attr("contenteditable", "false").empty().append("<p>First Train Time:</p><p contenteditable='true'>"+$('#train'+id).data("data-firstTime")+"</p>");
+//     $('#train'+id).find(".nextArrival").attr("contenteditable", "false").empty().append($("<p>").html("First Trin time:")).append($("<p>").html($('#train'+id).data("data-firstTime")).attr("contenteditable", "true"));
+//
+//
+//     $('#train'+id).find(".nextArrival").html("<p>First Trin Time:</p><p>"+$('#train'+id).data("data-firstTime")+"</p>");
+//     // $('#train'+$(this).attr("data-trainID")).find(".trainProperty").attr("contenteditable", true);
+//     $(this).find(".glyphicon").toggleClass("glyphicon-pencil").toggleClass("glyphicon-ok");
+//     //Change to indicate First Train and Frequency within that row
+//     //Add class to make editing status noticeable: tint the whole row blue?
+//     //update key in db
+//   }
+// });
+//
+//
+//
+//
+//
+// function updateArrivalTimes(){
+//   $('.trainRow').each(function(){
+//     var nextArrival = $(this).children(".nextArrival").text();
+//     var arrivalObj = calcNextArrival($(this).data("data-firstTime"), $(this).data("data-frequency"));
+//     $(this).children(".nextArrival").text(arrivalObj.nextArrival);
+//     $(this).children(".minutesToNext").text(arrivalObj.minutesToNext);
+//   });
+// }
 
 function calcNextArrival(firstTime, frequency){
   var firstTimeMoment = moment(firstTime, "HH:mm").subtract(1,"years");
